@@ -13,7 +13,7 @@ class _AttendancePageState extends State<AttendancePage> {
   List userData = [];
 
   Future<void> getrecord() async {
-    String uri = "http://10.0.2.2:92/practice_api/sample_view.php";
+    String uri = "http://10.0.2.2:92/attendance_api/view_teacher.php";
     try {
       var response = await http.get(Uri.parse(uri));
       setState(() {
@@ -37,13 +37,49 @@ class _AttendancePageState extends State<AttendancePage> {
           itemCount: userData.length,
           itemBuilder: (context, index) {
             return Card(
-              margin: const EdgeInsets.all(12),
-              child: ListTile(
-                title: Text(userData[index]["uname"]),
-                subtitle: Text(userData[index]["uemail"]),
+              margin:
+                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: ListTile(
+                  title: Text(userData[index]["tchr_name"]),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Education: ${userData[index]["tchr_edu"]}"),
+                      Text("Phone no: ${userData[index]["tchr_ph_one"]}"),
+                      Text("Email: ${userData[index]["tchr_email"]}"),
+                    ],
+                  ),
+                ),
               ),
             );
           }),
     );
   }
 }
+
+
+// void StudentCard(){
+//   Card(
+//               margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+//               child: Padding(
+//                 padding: const EdgeInsets.all(12.0),
+//                 child: ListTile(
+//                   title: Text(userData[index]["std_name"]),
+//                   subtitle: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text("School: ${userData[index]["std_school"]}"),
+//                       Text("Father: ${userData[index]["std_father_name"]}"),
+//                       Text("Mother: ${userData[index]["std_mother_name"]}"),
+//                       Text(
+//                         "Address: ${userData[index]["std_door"]}, ${userData[index]["std_street"]}, ${userData[index]["std_village"]}, ${userData[index]["std_taluk"]}, ${userData[index]["std_dist"]} - ${userData[index]["std_pin"]}",
+//                         style: const TextStyle(fontStyle: FontStyle.italic),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             );
+// }
