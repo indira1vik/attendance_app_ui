@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class StudentPage extends StatefulWidget {
   const StudentPage({super.key});
@@ -32,14 +36,87 @@ class _StudentPageState extends State<StudentPage> {
   String _selectedSchoolType = 'Primary';
   String _selectedStudentstatus = 'Single Parent';
   String _selectedcenter = 'Chennai';
-
   DateTime _selectedDate = DateTime.now();
 
-  TextEditingController _studyingController = TextEditingController();
-  TextEditingController _pincodeController = TextEditingController();
-  TextEditingController _aadharNumberController = TextEditingController();
-  TextEditingController _phoneno1Controller = TextEditingController();
-  TextEditingController _phoneno2Controller = TextEditingController();
+  final TextEditingController _studyingController = TextEditingController();
+  final TextEditingController _pincodeController = TextEditingController();
+  final TextEditingController _aadharNumberController = TextEditingController();
+  final TextEditingController _phoneno1Controller = TextEditingController();
+  final TextEditingController _phoneno2Controller = TextEditingController();
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _fatherNameController = TextEditingController();
+  final TextEditingController _fatherEduController = TextEditingController();
+  final TextEditingController _fatherProfController = TextEditingController();
+  final TextEditingController _fatherAgeController = TextEditingController();
+  final TextEditingController _motherNameController = TextEditingController();
+  final TextEditingController _motherEduController = TextEditingController();
+  final TextEditingController _motherProfController = TextEditingController();
+  final TextEditingController _motherAgeController = TextEditingController();
+
+  final TextEditingController _schoolNameController = TextEditingController();
+  final TextEditingController _siblingController = TextEditingController();
+  final TextEditingController _healthController = TextEditingController();
+  final TextEditingController _skillsController = TextEditingController();
+  final TextEditingController _doorController = TextEditingController();
+  final TextEditingController _streetController = TextEditingController();
+  final TextEditingController _villageController = TextEditingController();
+  final TextEditingController _talukController = TextEditingController();
+  final TextEditingController _districtController = TextEditingController();
+  final TextEditingController _remarksController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  Future<void> insertRecord() async {
+    try {
+      String uri = "http://10.0.2.2:92/attendance_api/insert_student.php";
+      String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
+      var res = await http.post(Uri.parse(uri), body: {
+        "std_name": _nameController.text,
+        "std_gender": _selectedGender,
+        "std_dob": formattedDate,
+        "std_class": _selectedClass,
+        "std_medium": _selectedMedium,
+        "std_school": _schoolNameController.text,
+        "std_school_ad": _addressController.text,
+        "std_school_cat": _selectedSchoolCategory,
+        "std_school_type": _selectedSchoolType,
+        "std_aadhaar": _aadharNumberController.text,
+        "std_father_name": _fatherNameController.text,
+        "std_father_age": _fatherAgeController.text,
+        "std_father_edu": _fatherEduController.text,
+        "std_father_prof": _fatherProfController.text,
+        "std_mother_name": _motherNameController.text,
+        "std_mother_age": _motherAgeController.text,
+        "std_mother_edu": _motherEduController.text,
+        "std_mother_prof": _motherProfController.text,
+        "std_sib_name": _siblingController.text,
+        "std_health": _healthController.text,
+        "std_status": _selectedStudentstatus,
+        "std_skill": _skillsController.text,
+        "std_door": _doorController.text,
+        "std_street": _streetController.text,
+        "std_village": _villageController.text,
+        "std_taluk": _talukController.text,
+        "std_pin": _pincodeController.text,
+        "std_dist": _districtController.text,
+        "std_ph_one": _phoneno1Controller.text,
+        "std_ph_two": _phoneno2Controller.text,
+        "std_email": _emailController.text,
+        "std_center": _selectedcenter,
+        "std_since": _studyingController.text,
+        "std_remarks": _remarksController.text,
+      });
+      var response = jsonDecode(res.body);
+      if (response["success"] == "true") {
+        print("Recorded...");
+      } else {
+        print("Error");
+      }
+    } catch (ex) {
+      print(ex);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +125,14 @@ class _StudentPageState extends State<StudentPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          // ------------------------------------------
           Text('Student Name', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _nameController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Gender', style: subTitleDesign()),
           DropdownButtonFormField<String>(
             decoration: inputFormDesign(),
@@ -70,6 +152,7 @@ class _StudentPageState extends State<StudentPage> {
             },
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Date of Birth', style: subTitleDesign()),
           TextFormField(
             decoration: InputDecoration(
@@ -87,6 +170,7 @@ class _StudentPageState extends State<StudentPage> {
             onTap: _pickDate,
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Class', style: subTitleDesign()),
           DropdownButtonFormField<String>(
             decoration: inputFormDesign(),
@@ -119,6 +203,7 @@ class _StudentPageState extends State<StudentPage> {
             },
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Medium', style: subTitleDesign()),
           DropdownButtonFormField<String>(
             decoration: inputFormDesign(),
@@ -138,12 +223,21 @@ class _StudentPageState extends State<StudentPage> {
             },
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('School Name', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _schoolNameController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('School Address', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _addressController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('School Category', style: subTitleDesign()),
           DropdownButtonFormField<String>(
             decoration: inputFormDesign(),
@@ -163,6 +257,7 @@ class _StudentPageState extends State<StudentPage> {
             },
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('School Type', style: subTitleDesign()),
           DropdownButtonFormField<String>(
             decoration: inputFormDesign(),
@@ -183,6 +278,7 @@ class _StudentPageState extends State<StudentPage> {
             },
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Aadhaar Number', style: subTitleDesign()),
           TextField(
             decoration: inputFormDesign(),
@@ -193,36 +289,77 @@ class _StudentPageState extends State<StudentPage> {
             controller: _aadharNumberController,
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Father Name', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _fatherNameController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Father Age', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _fatherAgeController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Father Educational Qualification', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _fatherEduController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Father Profession', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _fatherProfController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Mother Name', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _motherNameController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Mother Age', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _motherAgeController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Mothers Education Qualification', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _motherEduController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Mother Profession', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _motherProfController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Siblings Name with Class', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _siblingController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Health Issues (If any)', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _healthController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Student Status', style: subTitleDesign()),
           DropdownButtonFormField<String>(
             decoration: inputFormDesign(),
@@ -243,21 +380,42 @@ class _StudentPageState extends State<StudentPage> {
             },
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Special Skills (If any)', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _skillsController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Door No', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _doorController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Street', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _streetController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Village', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _villageController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Taluk', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _talukController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Pincode', style: subTitleDesign()),
           TextField(
             decoration: inputFormDesign(),
@@ -268,9 +426,14 @@ class _StudentPageState extends State<StudentPage> {
             controller: _pincodeController,
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('District', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _districtController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Phone No1', style: subTitleDesign()),
           TextField(
             decoration: inputFormDesign(),
@@ -281,6 +444,7 @@ class _StudentPageState extends State<StudentPage> {
             controller: _phoneno1Controller,
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Phone No2', style: subTitleDesign()),
           TextField(
             decoration: inputFormDesign(),
@@ -291,9 +455,14 @@ class _StudentPageState extends State<StudentPage> {
             controller: _phoneno2Controller,
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Email (If Any)', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _emailController,
+          ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Center Name', style: subTitleDesign()),
           DropdownButtonFormField<String>(
             decoration: inputFormDesign(),
@@ -313,6 +482,7 @@ class _StudentPageState extends State<StudentPage> {
             },
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Studying Since', style: subTitleDesign()),
           TextField(
             decoration: inputFormDesign(),
@@ -323,23 +493,33 @@ class _StudentPageState extends State<StudentPage> {
             controller: _studyingController,
           ),
           const SizedBox(height: 20),
+          // ------------------------------------------
           Text('Remarks', style: subTitleDesign()),
-          TextFormField(decoration: inputFormDesign()),
+          TextFormField(
+            decoration: inputFormDesign(),
+            controller: _remarksController,
+          ),
           const SizedBox(height: 40),
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: const Color(0xFFF27121),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text('Submit',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  )),
+          // ------------------------------------------
+          GestureDetector(
+            onTap: () {
+              insertRecord();
+            },
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: const Color(0xFFF27121),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Submit',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
             ),
           )
         ],
@@ -360,5 +540,4 @@ class _StudentPageState extends State<StudentPage> {
       });
     }
   }
-
 }
