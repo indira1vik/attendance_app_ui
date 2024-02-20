@@ -85,8 +85,8 @@ class _TeacherPageState extends State<TeacherPage> {
           "tchr_ph_two": _phoneno2Controller.text,
           "tchr_email": _emailController.text,
           "tchr_center": _selectedcenter,
-          // "tchr_doj": formattedDate1,
-          // "tchr_dol": formattedDate2,
+          "tchr_doj": formattedDate1,
+          "tchr_dol": formattedDate2,
           "tchr_bankacc": _bankaccController.text,
           "tchr_bankname": _banknameController.text,
           "tchr_branch": _bankbranchController.text,
@@ -322,7 +322,27 @@ class _TeacherPageState extends State<TeacherPage> {
           Text('Date of Joining', style: subTitleDesign()),
           TextFormField(
             decoration: InputDecoration(
-              hintText: "${_selectedDate.toLocal()}".split(' ')[0],
+              hintText: "${_selectedDateJoin.toLocal()}".split(' ')[0],
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Color(0xFFF27121)),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            readOnly: true,
+            onTap: _pickDate,
+          ),
+          const SizedBox(height: 20),
+          // ---------------------------------------------
+
+
+          Text('Date of Leaving', style: subTitleDesign()),
+          TextFormField(
+            decoration: InputDecoration(
+              hintText: "${_selectedDateLeave.toLocal()}".split(' ')[0],
               focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Color(0xFFF27121)),
                 borderRadius: BorderRadius.circular(8),
